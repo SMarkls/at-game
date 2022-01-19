@@ -2,13 +2,26 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
-int main(void)
+#include <windows.h>
+
+void setcur(int x, int y) // fucntion, which refresh play field
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+
+int main()
 {
 	/*
 	TODO:
-	 * изменяемый размер поля				[A; B] A+rand()%(B - A + 1)
+	 * изменяемый размер поля			[A; B] A+rand()%(B - A + 1)
 	 * случайная генерация стен
 	 */
+
+
 	srand(time(NULL));
 	int dx, dy; // delta x and delta y, generates in range [-1; 1]
 	int x, y; // current coordinates of marker
@@ -18,20 +31,20 @@ int main(void)
 	int selector; // chooses which coordinate should change 0 - x, 1 - y
 	char key; // key entered
 	char field[10][21]; // initializing playing field  10 21
-	ax = rand() * 1.0 / RAND_MAX * 17 + 1;
-	ay = rand() * 1.0 / RAND_MAX * 8 + 1;
-	y = rand() * 1.0 / RAND_MAX * 8 + 1;
-	x = rand() * 1.0 / RAND_MAX * 17 + 1;
+	ax = 1 + rand() % (21 - 1);
+	ay = 1 + rand() % (10 -1);
+	y = 1 + rand() % (10 - 1);
+	x = 1 + rand() % (21 - 1);
 	while (x == ax && y == ay) { 
-		ay = rand() * 1.0 / RAND_MAX * 8 + 1;
-		ax = rand() * 1.0 / RAND_MAX * 17 + 1;
+		ay = 1 + rand() % (10 - 1);
+		ax = 1 + rand() % (21 - 1);
 	}
 	do {
 
 		sprintf(field[0], "####################");
 		sprintf(field[10], "####################");
 		for (int i = 1; i < 10; i++)
-			sprintf(field[i], "#                 #");
+			sprintf(field[i], "#                  #");
 		field[y][x] = '@'; // marker
 		field[ay][ax] = '*'; // point
 		dx = -1 + rand() % (1 + 1 + 1);
@@ -45,7 +58,7 @@ int main(void)
 			ax = ox;
 			ay = oy;
 		}
-		system("cls"); // clearing screen
+		setcur(0, 0);
 		printf("For exit press Q...\nUse WASD to move.\n");
 		for (int i = 0; i < 11; i++)
 			printf("%s\n", field[i]);
